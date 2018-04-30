@@ -1,12 +1,14 @@
 <?php
 
 namespace sales\Http\Middleware;
-
+use Exception;
 use Closure;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Support\Facades\Auth;
 
 class RedirectIfAuthenticated
 {
+
     /**
      * Handle an incoming request.
      *
@@ -15,11 +17,25 @@ class RedirectIfAuthenticated
      * @param  string|null  $guard
      * @return mixed
      */
+
+
+
     public function handle($request, Closure $next, $guard = null)
     {
-        if (Auth::guard($guard)->check()) {
-            return redirect('/home');
+        switch($guard){
+            case 'admin':
+                if(Auth::guard($guard)->check()){
+                    return redirect()->route('admin.dashboard');
+                }
+                break;
+            default:
+                if (Auth::guard($guard)->check()) {
+                    return redirect('/dashboard');
+                }
+                break;
         }
+
+
 
         return $next($request);
     }

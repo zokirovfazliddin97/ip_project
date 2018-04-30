@@ -3,7 +3,9 @@
 namespace sales\Http\Controllers;
 
 use Illuminate\Http\Request;
+use sales\Post;
 use sales\User;
+use DB;
 
 class DashboardController extends Controller
 {
@@ -22,10 +24,11 @@ class DashboardController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $user_id = auth()->user()->id;
-        $user = User::find($user_id);
-        return view('dashboard')->with('posts', $user->posts);
+        $user = User::find($user_id)->orderBy('created_at', 'desc');
+        $posts = Post::where('user_id', '=', "$user_id")->orderBy('created_at', 'desc')->paginate(10);
+        return view('dashboard')->with('posts', $posts);
     }
 }
