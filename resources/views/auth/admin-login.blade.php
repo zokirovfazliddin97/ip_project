@@ -1,12 +1,12 @@
 @extends('layouts.logsign')
 
 @section('content1')
-
+<p>ADMIN</p>
 <div class="row">
 <div class="col-md-4"> </div>
 <div class="col-md-4">
 <!--form start-->
-<form class="form-container" method="POST" action="{{ route('login') }}">
+<form class="form-container" method="POST" action="{{ route('admin.login.submit') }}">
                         @csrf
 <div class="form-group">
 

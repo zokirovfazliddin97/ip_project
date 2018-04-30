@@ -1,11 +1,11 @@
 body{
-    background-color: navajowhite;
+    background-color: #f7f7f7;
 }
 .bgimg-1
  {
     padding: 15%;
     color: #fff;
-     background-image: image("/images/main.jpg") fixed;
+     background-image: url("/storage/cover_images/F1.jpg") fixed;
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;

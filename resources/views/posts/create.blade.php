@@ -10,6 +10,16 @@
             {{Form::text('title', '', ['class' => 'form-control', 'placeholder' => 'Title'])}}
         </div>
 
+       <div class="form-group">
+
+        {{Form::select('category', array('Clothing' => 'Clothing',
+        'Food' => 'Food', 'Technology'=> 'Technology', 'Other' => 'Other'), 'C')}}
+
+        {{Form::select('amount', array('10' => '10%',
+                '20' => '20%', '30'=> '30%', '40' => '40%'), '10')}}
+
+       </div>
+
          <div class="form-group">
                     {{Form::label('body', 'Body')}}
                     {{Form::textarea('body', '', ['class' => 'form-control', 'placeholder' => 'Type something about'])}}

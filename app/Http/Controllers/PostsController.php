@@ -19,6 +19,30 @@ class PostsController extends Controller
         return view('posts.index')->with('posts', $posts);
     }
 
+    public function clothing()
+    {
+        $posts = Post::where('category','=', 'Clothing')->orderBy('created_at', 'desc')->paginate(10);
+        return view('posts.clothing')->with('posts', $posts);
+    }
+
+    public function food()
+    {
+        $posts = Post::where('category','=', 'Food')->orderBy('created_at', 'desc')->paginate(10);
+        return view('posts.food')->with('posts', $posts);
+    }
+
+    public function technology()
+    {
+        $posts = Post::where('category','=', 'Technology')->orderBy('created_at', 'desc')->paginate(10);
+
+        return view('posts.technology')->with('posts', $posts);
+    }
+
+    public function others()
+    {
+        $posts = Post::where('category','=', 'Other')->orderBy('created_at', 'desc')->paginate(10);
+        return view('posts.others')->with('posts', $posts);
+    }
 
     public function create()
     {
@@ -31,6 +55,8 @@ class PostsController extends Controller
        $this->validate($request, [
            'title' =>'required',
            'body' =>'required',
+           'category' =>'required',
+           'amount' =>'required',
            'cover_image' => 'image|nullable|max:1999'
        ]);
 
@@ -42,12 +68,15 @@ class PostsController extends Controller
             $path = $request->file('cover_image')->storeAs('public/cover_images', $fileNameToStore);
 
         }else{
-            $fileNameToStore = "noimage.jpg";
+            $fileNameToStore = 'noimage.jpg';
         }
 
         $post = new Post;
         $post->title = $request->input('title');
         $post->body = $request->input('body');
+
+        $post->category = $request->input('category');
+        $post->amount = $request->input('amount');
         $post->user_id = auth()->user()->id;
 
             $post->cover_image = $fileNameToStore;
@@ -63,13 +92,14 @@ class PostsController extends Controller
 
         $post = Post::find($id);
         $x = $post->user->id;
-        $posts = Post::orderBy('created_at', 'desc')->paginate(10);
+
         if(auth()->check() && (auth()->user()->id == $post->user->id)) {
-            return redirect('/dashboard')->with('posts', $posts);
+            //$posts = Post::where('user_id','=', "auth()->user()->id")->orderBy('created_at', 'desc')->paginate(10);
+            return redirect('/dashboard');//->with('posts', $posts);
         }
         $posts_others = DB::select("SELECT * FROM posts WHERE user_id = $x ORDER BY created_at DESC ");
-
-        return view('posts.show')->with('posts', $posts_others);
+        $posts = Post::where('user_id','=', "$x")->orderBy('created_at', 'desc')->paginate(10);
+        return view('posts.show')->with('posts', $posts);
     }
 
 
@@ -88,7 +118,9 @@ class PostsController extends Controller
     {
         $this->validate($request, [
             'title' =>'required',
-            'body' =>'required'
+            'body' =>'required',
+            'category' =>'required',
+            'amount' =>'required'
         ]);
 
         if($request->hasFile('cover_image')){
@@ -103,6 +135,8 @@ class PostsController extends Controller
         $post = Post::find($id);
         $post->title = $request->input('title');
         $post->body = $request->input('body');
+        $post->category = $request->input('category');
+        $post->amount = $request->input('amount');
         if($request->hasFile('cover_image')){
             $post->cover_image = $fileNameToStore;
         }
